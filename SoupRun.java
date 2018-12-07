@@ -312,7 +312,7 @@ class SoupFrame extends JFrame { //This class houses the program
 						//}
 						pw.close();
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,"Could not save file.");
+						JOptionPane.showMessageDialog(null,"Unable to save file.");
 					}
 				}
 			}
@@ -361,7 +361,7 @@ class SoupFrame extends JFrame { //This class houses the program
 	public SoupFrame() { //SoupFrame constructor
 		choice = new Integer(0);
 		milesRan = new Integer(0);
-		setDefaultCloseOperation(EXIT_ON_CLOSE); //Close
+		setDefaultCloseOperation(HIDE_ON_CLOSE); //Close
 	    setBounds(100,100,600,1000); //Boundaries
 	    setTitle("Soups 1.0"); //Title
 	    Container c = getContentPane();
