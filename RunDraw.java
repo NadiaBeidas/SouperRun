@@ -4,7 +4,18 @@
 *    the starting location and ending location
 * 2. Calculates the duration of the run, the pace, and the overall distance
 * 3. Saves the accepted and calculated info on to a file
-* 4. The pace and the duration of each run is drawn on to a panel
+* 4. The pace, the duration, and the distance of each run is drawn on to a panel
+* 5. The distance graph features not only the distance in kilometers, but it also
+*    has the number of miles on the graph
+* 6. To optimize the experience with using SoupRun, it would be useful to use the
+*    distance conversion as shown on the graph.
+* 7. The duration supports up to approximately 80 minutes
+* 8. The distance supports up to 14km or about 9 miles
+* 9. The pace supports up to about 16min/km
+* 10. Once the Soup button is clicked, it will open the SoupRun program, which
+*     asks the user to enter the miles ran manually and performs calculations
+*     to determine whether the user has burned enough calories to consume soup.
+*     Otherwise, the user is discouraged from consuming soup.
 */
 import java.lang.Math;
 
@@ -49,8 +60,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-//import java.io.;
 
 import java.beans.XMLEncoder;
 import java.beans.XMLDecoder;
@@ -275,10 +284,7 @@ class RunDurationPanel extends JPanel{
         f = new Font("Arial", Font.PLAIN, 12);
         g.setFont(f);
 
-        g.drawLine(50,25,50,625);
-        g.drawLine(50,625,700,625);
-        
-        // dash marks min
+        // lines for the x and y-axis
         g.drawLine(50,25,50,625);
         g.drawLine(50,625,700,625);
 
@@ -308,7 +314,6 @@ class RunDurationPanel extends JPanel{
 
         g.drawLine(45,556,55,556);
         g.drawString("10",25,561);
-        //g.drawLine(45,536,55,536);
 
         // dash marks per day
         g.drawLine(170,620,170,630);
@@ -317,21 +322,15 @@ class RunDurationPanel extends JPanel{
         g.drawLine(530,620,530,630);
         g.drawLine(650,620,650,630);
 
-        int runSize = runs.size();
+        // Draws each run
         for(Run runny : runs) {
+            // Retrieves information about where on the x-axis should the run be plotted
+            // and the calculation to find the duration
             datePlot = runs.indexOf(runny) + 1;
             duration = ((int)(runny.getElapsedMinutes()));
             decimalPart = runny.getElapsedMinutes() - duration;
-            System.out.print("Hello");
-            System.out.printf("%d\n", duration);
-            System.out.printf("%.2f\n", decimalPart);
-            //decimalPart = Math.round(decimalPart);
-            
-            //System.out.printf("%s",runny.toString());
-            //duration = duration - 9;
-            g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * duration) - (pixelSpacingY * decimalPart))), 5,5); //bottomY - (pixelSpacingY * distance)
-            //g.drawLine(170,620,leftX + (pixelSpacingX * datePlot), 120);
-            
+
+            g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * duration) - (pixelSpacingY * decimalPart))), 5,5);
         }
     }
     public RunDurationPanel(ArrayList<Run> runs) { 
@@ -347,12 +346,11 @@ class RunDistancePanel extends JPanel{
     final int pixelSpacingY = 40;
     final int pixelSpacingX = 120;
 
-    //private int distancePlot;
     private int distance;
     private int datePlot;
     private double decimalPart;
     private Font f;
-    //private double newDecimalPart;
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -407,6 +405,7 @@ class RunDistancePanel extends JPanel{
         g.drawLine(45,585,50,585);
         g.drawString("1",25,590);
 
+
         // dash marks per mile
         g.drawString("(mi.)",65,25);
 
@@ -445,18 +444,15 @@ class RunDistancePanel extends JPanel{
         g.drawLine(530,620,530,630);
         g.drawLine(650,620,650,630);
 
-        int runSize = runs.size();
+        // plots the point for the distance of the run
         for(Run runny : runs) {
+            // Retrieves information regarding where on the x-axis to plot
+            // and the distance of the run
             datePlot = runs.indexOf(runny) + 1;
             distance = (int)(runny.calculateDistance());
             decimalPart = runny.calculateDistance() - distance;
-            g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * distance)) - (pixelSpacingY * decimalPart)), 5,5); //bottomY - (pixelSpacingY * distance)
-            //g.drawLine(170,620,leftX + (pixelSpacingX * datePlot), 120);
+            g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * distance)) - (pixelSpacingY * decimalPart)), 5,5);
         }
-        JLabel lblConvertMessage = new JLabel("Convert to km to miles: ");
-        JTextField txtEnterKm = new JTextField(3);
-        JLabel lblConvertMiles = new JLabel("miles");
-        //txtEnterKm.addActionListener()
     }
 
     public RunDistancePanel(ArrayList<Run> runs) {
@@ -472,17 +468,7 @@ class RunPacePanel extends JPanel{
     final int leftX = 50;
     final double pixelSpacingY = 34.5;
     final int pixelSpacingX = 120;
-    //final int 
 
-    /*
-    private int distancePlot;
-    private int distance;
-    private int datePlot;
-    private double decimalPart;
-    private double newDecimalPart;
-    */
-
-    //private int pacePlot;
     private int pace;
     private int datePlot;
     private double decimalPart;
@@ -532,22 +518,16 @@ class RunPacePanel extends JPanel{
 
         int runSize = runs.size();
         for(Run runny : runs) {
+            // Retrieves information about where along the x-axis to plot
+            // and the pace of the run
             datePlot = runs.indexOf(runny) + 1;
             pace = (int)(runny.calculatePace());
             decimalPart = runny.calculatePace() - pace;
-            System.out.printf("%d\n", pace);
-            System.out.printf("%.2f\n", decimalPart);
-            //decimalPart = Math.round(decimalPart);
-            
-            System.out.printf("%s",runny.toString());
-            //pace = pace - 2;
 
+            // in case the user enters a negative time
             if (pace > 0){
-                g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * pace) - (pixelSpacingY * decimalPart))), 5,5); //bottomY - (pixelSpacingY * distance)
-            //g.drawLine(170,620,leftX + (pixelSpacingX * datePlot), 120);
+                g.fillOval(leftX + (pixelSpacingX * datePlot), (int)((bottomY - (pixelSpacingY * pace) - (pixelSpacingY * decimalPart))), 5,5);
             }
-            
-            
         }
     }
 
@@ -568,7 +548,7 @@ class RunFrame extends JFrame{
     private RunDurationPanel durationRun;
     private RunDistancePanel distanceRun;
     private RunPacePanel paceRun;
-    //private CalculatedInfoPanel calculatedInfo;
+
     private JPanel statement;
     private JPanel textFieldPan;
     private JPanel buttonPan;
@@ -590,35 +570,10 @@ class RunFrame extends JFrame{
     private String startTime;
     private String endTime;
 
-    //private String date;
     private double distanceKM;
     private int distanceMiles;
     private double duration;
     private double pace;
-
-    public void setLabels() {
-        JLabel lblDate = new JLabel();
-        JLabel lblDistanceKm = new JLabel();
-        JLabel lblDistanceMiles = new JLabel();
-        JLabel lblDuration = new JLabel();
-        JLabel lblPace = new JLabel();
-
-        //c.add()
-        for (Run runny : runs) {
-            date = runny.getDate();
-            distanceKM = runny.calculateDistance();
-            distanceMiles = (int)(runny.calculateDistance() / 1.609);
-            duration = runny.getElapsedMinutes();
-            pace = runny.calculatePace();
-
-            lblDate.setText(date);
-            lblDistanceKm.setText(Double.toString(distanceKM));
-            lblDistanceMiles.setText(Integer.toString(distanceMiles));
-            lblDuration.setText(Double.toString(duration));
-            lblPace.setText(Double.toString(pace));
-        }
-        
-    }
     
     @SuppressWarnings("unchecked")
     public void RunMenu() { // Nadia Creating the menu 
@@ -696,9 +651,6 @@ class RunFrame extends JFrame{
     }
         
     public void configureText() {
-
-        //runInfo.setLayout(new BorderLayout());
-
         txtDateRun = new JTextField(10);
         txtStartLoc = new JTextField(10);
         txtEndLoc = new JTextField(10);
@@ -706,36 +658,23 @@ class RunFrame extends JFrame{
         txtEndTime = new JTextField(10);
 
         enterFields = new JLabel();
-
-        /*
-        textFieldPan = new JPanel();
-        textFieldLay = new GroupLayout(textFieldPan);
-        textFieldPan.setLayout(textFieldLay);
-        textFieldLay.setAutoCreateContainerGaps(true);
-        textFieldLay.SequentialGroup hGroup = textFieldLay.createSequentialGroup();
-        hGroup.addGroup(textFieldLay.createParallelGroup())
-        */
         
         runInfo.add(txtDateRun, BorderLayout.EAST);
         runInfo.add(txtStartLoc, BorderLayout.EAST);
         runInfo.add(txtEndLoc, BorderLayout.EAST);
         runInfo.add(txtStartTime, BorderLayout.EAST);
         runInfo.add(txtEndTime, BorderLayout.EAST);
-
-
-        //dateRun.setHorizontalAlignment(JTextField.WEST);
-        
-        
     }
+
     public void configureUI() {
+        // Creates the frame
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBounds(100,100,800,750);
         setTitle("Run For Your Life!");
         Container c = getContentPane();
         c.setLayout(new BorderLayout());
-        //rPan = new RunPanel();
-        //c.add(rPan,BorderLayout.CENTER);
 
+        // creates the tabs in the frame
         funRun = new JTabbedPane();
         JPanel house = new JPanel();
         runInfo = new RunInfoPanel(runs);
@@ -743,14 +682,25 @@ class RunFrame extends JFrame{
         distanceRun = new RunDistancePanel(runs);
         paceRun = new RunPacePanel(runs);
 
-        //calculatedInfo = new CalculatedInfoPanel(runs);
-        
-
         funRun.addTab("Info", house);
         funRun.addTab("Duration", durationRun);
         funRun.addTab("Distance (km./mi.)", distanceRun);
         funRun.addTab("Pace", paceRun);
 
+
+
+        /*
+        This section is utilized for entering information about the run.
+
+        The top section would feature a message for the user to enter
+        all fields.
+
+        The middle section would contain labels to guide the user with what
+        to enter inside the textfields. It will also contain three buttons
+        for the user to use. There will be a Calculate button to graph the run.
+        The Clear button will be used to only clear the textfields. The Soup button
+        will be used to open the SoupRun program.
+        */
         statement = new JPanel();
         statement.setLayout(new FlowLayout());
         statement.setPreferredSize(new Dimension(800,75));
@@ -810,18 +760,6 @@ class RunFrame extends JFrame{
         panCenter.add(buttonPanel, BorderLayout.SOUTH);
 
         house.add(panCenter, BorderLayout.CENTER);
-
-        JPanel panSouth = new JPanel();
-        panSouth.setLayout(new FlowLayout());
-        panSouth.setPreferredSize(new Dimension(50,50));
-        //runInfo = new RunInfoPanel(runs);
-        //panSouth.add(runInfo);
-        //runInfo.setLabels();
-        //CalculatedInfoPanel cpf = new CalculatedInfoPanel(runs);
-        //panSouth.add(cpf);
-       // c.add(panSouth);
-        house.add(panSouth, BorderLayout.SOUTH);
-
 
         RunFrame me = this; 
         RunMenu(); //Nadia
@@ -986,10 +924,12 @@ class Run implements Serializable{
 
 public class RunDraw {
     public static void main (String[] args) {
+        // creates the frame object and allows it to be visible
         ArrayList<Run> runs = new ArrayList<Run>();
-        // create panel object and pass arraylist to it
         RunFrame rf = new RunFrame(runs);
         rf.setVisible(true);
+
+        // creates the frame object for the SoupRun program
         SoupFrame sfrm = new SoupFrame();
         WelcomeSoupPanel btp = new WelcomeSoupPanel();
         RunDraw rd = new RunDraw();
